@@ -1,0 +1,218 @@
+/* src/styles/global.css */
+
+/* First Navbar */
+.navbar-main {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #333; /* Dark background color */
+    color: white; /* White text */
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1000; /* Make sure it's above other content */
+}
+
+.navbar-title {
+    font-size: 1.5rem;
+    margin: 0;
+    cursor: pointer;
+}
+
+.btn-apply {
+    color: white;
+    text-decoration: none;
+    background-color: #007bff !important;
+    padding: 0.75rem 1.25rem;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+}
+
+.btn-apply:hover {
+    background-color: #0f3e6f !important;
+}
+
+/* Second Navbar (For Smooth Scroll) */
+.navbar-secondary {
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    padding: 0.5rem;
+    margin-top: 5rem; /* Avoid overlap with the first navbar */
+}
+
+.navbar-secondary button {
+    background: none;
+    border: none;
+    padding: 0.5rem 1rem;
+    margin: 0 0.5rem;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.navbar-secondary button:hover {
+    background-color: #ddd;
+}
+
+/* Styling for Apply Now Page */
+.apply-now-page {
+    margin-top: 8rem; /* To prevent content from being hidden under the navbars */
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.apply-now-page form {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.apply-now-page input,
+.apply-now-page button {
+    width: 100%;
+    padding: 0.75rem;
+    margin: 0.5rem 0;
+    font-size: 1rem;
+}
+
+.apply-now-page button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+}
+
+.apply-now-page button:hover {
+    background-color: #0056b3;
+}
+
+/* Responsive Styles */
+
+/* Mobile-First Approach: Base styles for small screens */
+@media (max-width: 599px) {
+    navbar-main {
+        display: flex;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        padding: 10px;
+        gap: 10px; /*Space between items*/
+    }
+
+    .contact-info{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 5px;
+        gap: 5px;
+        padding-right: 40%;
+    }
+
+    .navbar-title {
+        font-size: 18px;
+        margin: 0;
+    }
+
+    .btn-apply {
+        font-size: 14px;
+        padding: 8px 12px;
+        width: auto; /* Prevent full width */
+    }
+
+
+    .navbar-secondary {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .navbar-secondary button {
+        margin: 0.25rem 0;
+        font-size: 0.875rem;
+    }
+
+    .apply-now-page {
+        margin-top: 7rem;
+        padding: 1rem;
+    }
+
+    .apply-now-page input,
+    .apply-now-page button {
+        font-size: 0.875rem;
+        padding: 0.75rem;
+    }
+}
+
+/* Tablet Layout: For screens between 600px and 899px */
+@media (min-width: 600px) and (max-width: 899px) {
+    .navbar-main {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    .navbar-title {
+        font-size: 1.375rem;
+    }
+
+    .btn-apply {
+        padding: 0.75rem 1.25rem;
+        font-size: 0.9375rem;
+    }
+
+    .navbar-secondary {
+        flex-direction: row;
+        justify-content: center;
+    }
+
+    .navbar-secondary button {
+        font-size: 0.9375rem;
+    }
+
+    .apply-now-page {
+        margin-top: 8rem;
+        padding: 1.5rem;
+    }
+
+    .apply-now-page input,
+    .apply-now-page button {
+        font-size: 0.9375rem;
+    }
+}
+
+/* Larger Screens (Laptops and Desktops) */
+@media (min-width: 900px) {
+    .navbar-main {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    .navbar-title {
+        font-size: 1.5rem;
+    }
+
+    .btn-apply {
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+    }
+
+    .navbar-secondary {
+        flex-direction: row;
+        justify-content: center;
+    }
+
+    .navbar-secondary button {
+        font-size: 1rem;
+    }
+
+    .apply-now-page {
+        margin-top: 8rem;
+        padding: 2rem;
+    }
+
+    .apply-now-page input,
+    .apply-now-page button {
+        font-size: 1rem;
+    }
+}
