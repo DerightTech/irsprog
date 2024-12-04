@@ -5,6 +5,8 @@ import "../styles/global.css";
 import "../styles/home.css";
 import { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
 
 const testimonials = [
 {
@@ -57,6 +59,8 @@ const BenefitData = () => (
     );
 
     const ContactForm = () => {
+        const navigate = useNavigate(); // Initialize navigate hook
+    
         const [formData, setFormData] = useState({
             fullName: "",
             email: "",
@@ -75,7 +79,7 @@ const BenefitData = () => (
     
             try {
                 const response = await axios.post(
-                    "http://localhost:5000/submit-contact",
+                    `${process.env.REACT_APP_BACKEND_URL}/submit-contact`,
                     formData,
                     {
                         headers: {
@@ -85,7 +89,8 @@ const BenefitData = () => (
                 );
     
                 if (response.status === 200) {
-                    alert("Form submitted successfully!");
+                    alert("Message sent successfully!");
+                    navigate("/"); // Navigate back to the home page
                 } else {
                     alert(`Error: ${response.data.message}`);
                 }

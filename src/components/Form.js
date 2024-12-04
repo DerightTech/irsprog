@@ -17,6 +17,10 @@ const Form = () => {
     const [submitMessage, setSubmitMessage] = useState('');
     const [messageVisible, setMessageVisible] = useState(false);
     const [file, setFile] = useState(null);
+
+    
+    
+
     
     const [formData, setFormData] = useState({
         fullName: "",
@@ -125,7 +129,7 @@ const Form = () => {
             }
 
             // Make POST request with Axios
-            const response = await axios.post("http://localhost:5000/submit-form", formDataToSend, {
+            const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/submit-form`, formDataToSend, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },
