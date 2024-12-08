@@ -60,134 +60,263 @@ const BenefitData = () => (
 
     const ContactForm = () => {
         const navigate = useNavigate(); // Initialize navigate hook
-    
         const [formData, setFormData] = useState({
-            fullName: "",
-            email: "",
-            phone: "",
-            info: "",
-            message: "",
+          fullName: "",
+          email: "",
+          phone: "",
+          info: "",
+          message: "",
         });
-    
+        const [isSubmitting, setIsSubmitting] = useState(false);
+        const [progress, setProgress] = useState(0);
+        const [isSuccess, setIsSuccess] = useState(false);
+      
         const handleChange = (e) => {
-            const { name, value } = e.target;
-            setFormData({ ...formData, [name]: value });
+          const { name, value } = e.target;
+          setFormData({ ...formData, [name]: value });
         };
-    
+      
         const handleSubmit = async (e) => {
-            e.preventDefault();
-    
-            try {
-                const response = await axios.post(
-                    `${process.env.REACT_APP_BACKEND_URL}/submit-contact`,
-                    formData,
-                    {
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                    }
-                );
-    
-                if (response.status === 200) {
-                    alert("Message sent successfully!");
-                    navigate("/"); // Navigate back to the home page
-                } else {
-                    alert(`Error: ${response.data.message}`);
-                }
-            } catch (error) {
-                console.error("Error submitting form:", error);
-                alert("An error occurred. Please try again.");
+          e.preventDefault();
+          setIsSubmitting(true);
+      
+          // Progress animation
+          const interval = setInterval(() => {
+            setProgress((prev) => {
+              if (prev >= 100) {
+                clearInterval(interval); // Stop progress at 100%
+                return 100;
+              }
+              return prev + 1;
+            });
+          }, 50); // Increase progress by 1% every 50ms
+      
+          try {
+            const response = await axios.post(
+              `${process.env.REACT_APP_BACKEND_URL}/submit-contact`,
+              formData,
+              {
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              }
+            );
+      
+            if (response.status === 200) {
+              setIsSuccess(true);
+              setTimeout(() => {
+                alert("Message sent successfully!");
+                setFormData({ fullName: "", email: "", phone: "", info: "", message: "" }); // Reset form fields
+                navigate("/"); // Navigate back to the home page after success
+              }, 2000); // Show success message and wait for a while before navigating
+            } else {
+              alert(`Error: ${response.data.message}`);
             }
+          } catch (error) {
+            console.error("Error submitting form:", error);
+            alert("An error occurred. Please try again.");
+          }
         };
-    
+      
         return (
-            <section id="contact" className="contact-section">
-                <h2>Contact Us</h2>
-                <p>We're here to help. Get in touch!</p>
-                <form className="contact-form" onSubmit={handleSubmit}>
-                    <div className="form-group">
-                        <label htmlFor="fullName">
-                            Full Name <span className="required">*</span>
-                        </label>
-                        <input
-                            type="text"
-                            id="fullName"
-                            name="fullName"
-                            value={formData.fullName}
-                            onChange={handleChange}
-                            required
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="email">
-                            Email <span className="required">*</span>
-                        </label>
-                        <input
-                            type="email"
-                            id="email"
-                            name="email"
-                            value={formData.email}
-                            onChange={handleChange}
-                            required
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="phone">
-                            Phone Number <span className="required">*</span>
-                        </label>
-                        <input
-                            type="tel"
-                            id="phone"
-                            name="phone"
-                            value={formData.phone}
-                            onChange={handleChange}
-                            required
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="info">
-                            More Info <span className="required">*</span>
-                        </label>
-                        <select
-                            id="info"
-                            name="info"
-                            value={formData.info}
-                            onChange={handleChange}
-                            required
-                        >
-                            <option value="" disabled>
-                                - Select -
-                            </option>
-                            <option value="Grant Assistant">Grant Assistant</option>
-                            <option value="Audit & Assurance">Audit & Assurance</option>
-                            <option value="Financial Advisory">Financial Advisory</option>
-                            <option value="Analytics and M&A">Analytics and M&A</option>
-                            <option value="Middle Marketing">Middle Marketing</option>
-                            <option value="Legal Consulting">Legal Consulting</option>
-                            <option value="Regulatory Risk">Regulatory Risk</option>
-                            <option value="Other">Other</option>
-                        </select>
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="message">
-                            Message <span className="required">*</span>
-                        </label>
-                        <textarea
-                            id="message"
-                            name="message"
-                            value={formData.message}
-                            onChange={handleChange}
-                            required
-                        ></textarea>
-                    </div>
-                    <button type="submit" className="submit-button">
-                        Send Now
-                    </button>
-                </form>
-            </section>
+          <section id="contact" className="contact-section">
+            <h2>Contact Us</h2>
+            <p>We're here to help. Get in touch!</p>
+            <form className="contact-form" onSubmit={handleSubmit}>
+              <div className="form-group">
+                <label htmlFor="fullName">
+                  Full Name <span className="required">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="fullName"
+                  name="fullName"
+                  value={formData.fullName}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="email">
+                  Email <span className="required">*</span>
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="phone">
+                  Phone Number <span className="required">*</span>
+                </label>
+                <input
+                  type="tel"
+                  id="phone"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="info">
+                  More Info <span className="required">*</span>
+                </label>
+                <select
+                  id="info"
+                  name="info"
+                  value={formData.info}
+                  onChange={handleChange}
+                  required
+                >
+                  <option value="" disabled>
+                    - Select -
+                  </option>
+                  <option value="Grant Assistant">Grant Assistant</option>
+                  <option value="Audit & Assurance">Audit & Assurance</option>
+                  <option value="Financial Advisory">Financial Advisory</option>
+                  <option value="Analytics and M&A">Analytics and M&A</option>
+                  <option value="Middle Marketing">Middle Marketing</option>
+                  <option value="Legal Consulting">Legal Consulting</option>
+                  <option value="Regulatory Risk">Regulatory Risk</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+              <div className="form-group">
+                <label htmlFor="message">
+                  Message <span className="required">*</span>
+                </label>
+                <textarea
+                  id="message"
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  required
+                ></textarea>
+              </div>
+      
+              {/* Circular Progress Bar */}
+              {/* Render progress circle only when the form is submitting */}
+        {isSubmitting && !isSuccess && (
+          <div className="circle-container">
+            <svg className="progress-circle" width="100" height="100">
+              <circle
+                className="progress-background"
+                cx="50"
+                cy="50"
+                r="45"
+                strokeWidth="5"
+              />
+              <circle
+                className="progress-bar"
+                cx="50"
+                cy="50"
+                r="45"
+                strokeWidth="5"
+                strokeDasharray="283"
+                strokeDashoffset={283 - (283 * progress) / 100}
+                fill="none"
+              />
+            </svg>
+            <div className="progress-text">{progress}%</div>
+          </div>
+        )}
+              <button type="submit" className="submit-button">
+                Send Now
+              </button>
+            </form>
+      
+            {/* Success Message */}
+            {isSuccess && (
+              <div className="success-message">
+                <h3>Message Successfully Sent!</h3>
+              </div>
+            )}
+          </section>
         );
-    };
+      };
     
+    const HeroSection = () => {
+        return (
+          <div className="hero-container">
+            <div className="hero-slideshow">
+              <div className="hero-content">
+                <h2 className="hero-title">MAX GRANT PROGRAM</h2>
+                <h2 className="hero-subtitle">
+                  Access More Ultimate Grant and Affordability For a Better Quality of Life
+                </h2>
+                <h2 className="hero-tagline">ONLINE BENEFITS PROGRAM</h2>
+              </div>
+            </div>
+          </div>
+        );
+      };
+
+      const ImageBox = () => {
+        return (
+          <div className="image-box-container">
+            {/* First Column */}
+            <div className="image-box-column">
+              <div className="image-box-item">
+                <div className="image-box-wrapper">
+                  <figure className="image-box-img">
+                    <Link to="/apply-now" tabIndex="-1">
+                      <img
+                        loading="lazy"
+                        decoding="async"
+                        width="150"
+                        height="150"
+                        src="https://maxgraprog.com/wp-content/uploads/2024/10/submit-key-red-square.jpeg"
+                        alt="Apply For Grant"
+                      />
+                    </Link>
+                  </figure>
+                  <div className="image-box-content">
+                    <h3 className="image-box-title">
+                      <Link to="/apply-now">Apply For Grant</Link>
+                    </h3>
+                    <p className="image-box-description">
+                      The MAX program is the largest public supported Grant Program. Click here to apply.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+      
+            {/* Second Column */}
+            <div className="image-box-column">
+              <div className="image-box-item">
+                <div className="image-box-wrapper">
+                  <figure className="image-box-img">
+                    <Link to="/check-eligibility" tabIndex="-1">
+                      <img
+                        loading="lazy"
+                        decoding="async"
+                        width="150"
+                        height="150"
+                        src="https://maxgraprog.com/wp-content/uploads/2024/10/real-time-eligibility-verification-150x150.png"
+                        alt="Check Eligibility"
+                      />
+                    </Link>
+                  </figure>
+                  <div className="image-box-content">
+                    <h3 className="image-box-title">
+                      <Link to="/apply-now">Check Eligibility</Link>
+                    </h3>
+                    <p className="image-box-description">
+                      On MAX, before you apply for a Grant, you must check to see if you are eligible or not.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      };
 
 const Home = () => {
 // Handle smooth scroll to specific section
@@ -200,10 +329,10 @@ return (
     {/* First Nav Bar */}
     <nav className="navbar-main">
     <h1 className="navbar-title">Max Funding</h1>
-    <div className="contact-info">
+    {/* <div className="contact-info">
                 <span>+1(480) 920-0606</span>
                 <span>info@irsgrantfederal.com</span>
-    </div>
+    </div> */}
     <Link className="btn-apply" to="/apply-now">Apply Now</Link>
     </nav>
 
@@ -216,7 +345,15 @@ return (
     <button className="nav-button" onClick={() => handleScroll("benefit")}>Benefit Data</button>
     <button className="nav-button" onClick={() => handleScroll("contact")}>Contact Us</button>
     </nav>
-
+    <br></br>
+    <section>
+    <HeroSection/>
+    </section>
+    <section>
+    <ImageBox/>
+    </section>
+        
+    
     {/* Sections */}
     <section id="home" className="section">
     <h2>IRS Max Federal Government Grants Funding Program</h2>

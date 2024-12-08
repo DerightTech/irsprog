@@ -20,10 +20,10 @@ const ApplyNow = () => {
                 <h1 className="navbar-title" onClick={handleHomeNavigation} style={{ cursor: "pointer" }}>
                 Max Funding
                 </h1>
-                <div className="contact-info">
+                {/* <div className="contact-info">
                     <span>+1(480) 920-0606</span>
                     <span>info@irsgrantfederal.com</span>
-                </div>
+                </div> */}
                 <a href="/apply-now" className="btn-apply">Apply Now</a>
             </nav>
 

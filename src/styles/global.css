@@ -117,13 +117,32 @@
     }
 
     .btn-apply {
+        display: none;
         font-size: 14px;
         padding: 8px 12px;
         width: auto; /* Prevent full width */
     }
-
-
     .navbar-secondary {
+        display: flex;
+        flex-wrap: wrap; /* Enable wrapping */
+        gap: 20px; /* Space between buttons */
+        justify-content: flex-start; 
+        padding: 1px;
+        padding-top: 0%;
+        height: 50%;
+      }
+    
+      .nav-button {
+        flex: 0 0 25%; /* Each button takes 30% width */
+        max-width: 25%; /* Prevent buttons from growing beyond 30% */
+        text-align: center;
+        
+        padding: 10px;
+        margin: 0;
+        box-sizing: border-box; /* Ensure padding doesn't affect width */
+      }
+
+    /* .navbar-secondary {
         flex-direction: column;
         align-items: center;
     }
@@ -131,7 +150,7 @@
     .navbar-secondary button {
         margin: 0.25rem 0;
         font-size: 0.875rem;
-    }
+    } */
 
     .apply-now-page {
         margin-top: 7rem;
