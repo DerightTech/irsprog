@@ -169,14 +169,16 @@ const Form = () => {
             console.log("Response from server:", response.data);
 
             // Display success message
-            setSubmitMessage("Your application has been successfully submitted!");
+            setSubmitMessage(
+                "Your application has been successfully submitted! Thank you for submitting your application. Your Grant Application is Under Review, and we will get back to you shortly. We want to assure you that we have received your application and it is currently under review. We understand the importance of this program to you, and we want to make sure we give each application the time and attention it deserves."
+            );
             setMessageVisible(true);
 
             // Hide the success message after 5 seconds and navigate to home
             setTimeout(() => {
                 setMessageVisible(false);
-                navigate("/"); // Redirect to home page after 5 seconds
-            }, 5000);
+                navigate("/"); // Redirect to home page after 15 seconds
+            }, 15000);
 
         } catch (error) {
             console.error("Error submitting form:", error);
